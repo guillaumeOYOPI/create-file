@@ -3,7 +3,7 @@
  * @param {string} data exemple for csv '1,2,3\n4,5,6'
  * @param {string} fileName exemple: export
  * @param {string} ext extension: csv
- * @param {string} element require ID from your <a id="your-id"></a> for download file
+ * @param {string} element ID exemple: your_id -> <a id="your_id"></a> for download file
  */
 class generateFile{
     constructor( data, fileName, ext, element = false){
@@ -14,8 +14,10 @@ class generateFile{
 
             if( element )
                 object_file.element = document.getElementById( element );
-            else
+            else{
                 object_file.element = document.createElement("a");
+                object_file.isTemp = true;
+            }
 
                 object_file.data = String( data );
                 object_file.name = String( fileName );
@@ -24,13 +26,13 @@ class generateFile{
                 object_file.token = Math.random().toString(36).substr(2);
 
                 if( typeof object_file.element !== 'object' || object_file.element === null )
-                    failureCallback( 'Something has wrong with yours "element".' );
+                    failureCallback( 'Something has wrong with your "element".' );
                 else if( typeof object_file.data !== 'string' || object_file.data.length <= 0 )
-                    failureCallback( 'Something has wrong with yours "data".' );
+                    failureCallback( 'Something has wrong with your "data".' );
                 else if(typeof object_file.name !== 'string'  || object_file.name.length <= 0 )
-                    failureCallback( 'Something has wrong with yours "name".' );
+                    failureCallback( 'Something has wrong with your "name".' );
                 else if( typeof object_file.ext  !== 'string' || object_file.ext.length  <= 0)
-                    failureCallback( 'Something has wrong with yours "ext".' );
+                    failureCallback( 'Something has wrong with your "ext".' );
                 else {
 
                     object_file.blob = new Blob(
@@ -45,10 +47,10 @@ class generateFile{
                     object_file.element.style.display = 'none';
                     object_file.element.dataset.id = object_file.token;
 
-                    if( ! object_file.blob ) failureCallback( 'Something has wrong with yours "blob".' );
-                    else if( ! object_file.url ) failureCallback( 'Something has wrong with yours "url".' );
-                    else if( ! object_file.element.href ) failureCallback( 'Something has wrong with yours "href".' );
-                    else if( ! object_file.element.download ) failureCallback( 'Something has wrong with yours "download".' );
+                    if( ! object_file.blob ) failureCallback( 'Something has wrong with your "blob".' );
+                    else if( ! object_file.url ) failureCallback( 'Something has wrong with your "url".' );
+                    else if( ! object_file.element.href ) failureCallback( 'Something has wrong with your "href".' );
+                    else if( ! object_file.element.download ) failureCallback( 'Something has wrong with your "download".' );
 
                 else resolve( object_file );
             }
@@ -58,6 +60,15 @@ class generateFile{
             return object_file;
 
         }).catch( function( failureCallback ){
+
+            let theParent = document.querySelector('.flexible');
+            let theKid = document.createElement("div");
+
+            theKid.className = 'error-message';
+            theKid.innerHTML = failureCallback;
+
+            theParent.insertBefore( theKid, theParent.firstChild );
+
             throw new Error( failureCallback );
         });
     }
@@ -68,21 +79,19 @@ class generateFile{
         setTimeout( () => {
             let element = document.querySelector( '[data-id="' + this.token + '"]' );
             if( element ){
+
                 element.click();
                 window.URL.revokeObjectURL( element.url );
-                element.remove();
+
+                element.href = "";
+                element.download = "";
+                element.dataset.id = "";
+
+                if( this.isTemp )
+                    element.remove();
             }
         }, 1);
     }
-};
-
-var file;
-
-let datafile = {
-    data: '1,2,3\n4,5,6',
-    name: 'export',
-    ext: 'csv',
-    element: 'toDownload'
 };
 
 var ready = ( callback ) => {
@@ -90,12 +99,23 @@ var ready = ( callback ) => {
     else document.addEventListener( "DOMContentLoaded", callback );
 }
 ready( () => {
-    var before = new Date();
 
-    file = new generateFile( datafile.data, datafile.name, datafile.ext, datafile.element);
-    file.download();
+    let button = document.getElementById( 'button' );
 
-    var after = new Date();
+    button.addEventListener( 'click', function(e) {
+        e.preventDefault();
 
-    console.log( after.getMilliseconds() - before.getMilliseconds() + 'ms' )
+        let text = document.getElementById( 'textarea' );
+        let name = document.getElementById( 'name' );
+        let extension = document.getElementById( 'extension' );
+
+        let datafile = {
+            data: text.value,
+            name: name.value,
+            ext : extension.value
+        };
+
+        const file = new generateFile( datafile.data, datafile.name, datafile.ext);
+        file.download();
+    });
 });

@@ -1,10 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
+        <style>
+            html{
+                font-size: 67.5%;
+            }
+            *{
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+                font-size: 15px;
+            }
+            .flexible{
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                width: 100%;
+                max-width: 400px;
+                margin: 15px;
+            }
+            .flexible #textarea{
+                margin-top: 15px;
+                height: 200px;
+                padding: 15px 10px;
+            }
+            .flexible .input{
+                margin-top: 15px;
+                padding: 15px 10px;
+                width: 100%;
+                max-width: 165px;
+            }
+            .row{
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .error-message{
+                background:rgba(223, 117, 117,.15);
+                border-left: 2px solid red;
+                padding: 15px 10px;
+                margin: 5px 0;
+            }
+        </style>
     </head>
     <body>
-        <a href="#" id="toDownload" onclick="toDownload()">aaaa</a>
+        <div class="flexible">
+        <textarea id="textarea" placeholder="script / text etc..."></textarea>
+            <div class="row">
+                <input id="extension" class="input" type="text" placeholder="extension : .js .php etc..." value="">
+                <input id="name" class="input" type="text" placeholder="file name : toto" value="">
+                <input id="button" class="input" type="submit" value="Download">
+            </div>
+        </div>
         <script src="createfile.js"></script>
     </body>
 </html>
