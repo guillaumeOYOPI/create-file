@@ -13,10 +13,14 @@ class generateFile{
         
         new Promise( ( resolve, failureCallback ) => {
 
-                object_file.element = document.getElementById( element );
+                object_file.element = document.createElement("a");
                 object_file.data = String( data );
                 object_file.name = String( fileName );
                 object_file.ext  = String( ext );
+
+                object_file.token = Math.random().toString(36).substr(2);
+
+                console.log( 'token : ' + object_file.token );
 
                 if( typeof object_file.element !== 'object' || object_file.element === null )
                     failureCallback( 'Something has wrong with yours "element".' );
@@ -37,6 +41,9 @@ class generateFile{
                     object_file.element.href = object_file.url;
                     object_file.element.download = object_file.name + '.' + object_file.ext;
 
+                    object_file.element.style.display = 'none';
+                    object_file.element.id = object_file.token;
+
                     if( ! object_file.blob ) failureCallback( 'Something has wrong with yours "blob".' );
                     else if( ! object_file.url ) failureCallback( 'Something has wrong with yours "url".' );
                     else if( ! object_file.element.href ) failureCallback( 'Something has wrong with yours "href".' );
@@ -47,6 +54,7 @@ class generateFile{
             }
         ).then( function( object_file ){
 
+            document.body.append( object_file.element );
             return object_file;
 
         }).catch( function( failureCallback ){
@@ -57,10 +65,17 @@ class generateFile{
      * Trigger download
      */
     download(){
-        this.element.click();
-        window.URL.revokeObjectURL( this.url );
-        this.element.href = '';
-        this.element.download = '';
+
+        console.log(this.token);
+
+        let element = document.getElementById( this.token );
+
+        console.log(element);
+        if( element ){
+            element.click();
+            window.URL.revokeObjectURL( element.url );
+            element.remove();
+        }   
     }
 };
 
@@ -71,8 +86,14 @@ let datafile = {
     element: 'toDownload'
 };
 
-const file = new generateFile( datafile.data, datafile.name, datafile.ext, datafile.element );
+var ready = ( callback ) => {
+    if (document.readyState != "loading") callback();
+    else document.addEventListener("DOMContentLoaded", callback);
+}
+ready( () => {
+    const file = new generateFile( datafile.data, datafile.name, datafile.ext, datafile.element );
 
-console.log( file );
+    console.log( file );
 
-//file.download();
+    file.download();
+});
