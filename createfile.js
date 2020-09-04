@@ -61,14 +61,19 @@ class generateFile{
 
         }).catch( function( failureCallback ){
 
-            let theParent = document.querySelector('.flexible');
-            let theKid = document.createElement("div");
+            if( ! document.querySelector('.error-message') ){
+                let theParent = document.querySelector('.flexible');
+                let theKid = document.createElement("div");
+    
+                theKid.className = 'error-message';
+                theKid.innerHTML = failureCallback;
+    
+                theParent.insertBefore( theKid, theParent.firstChild );
 
-            theKid.className = 'error-message';
-            theKid.innerHTML = failureCallback;
-
-            theParent.insertBefore( theKid, theParent.firstChild );
-
+            } else {
+                let e_el = document.querySelector('.error-message');
+                e_el.innerHTML = failureCallback;
+            }
             throw new Error( failureCallback );
         });
     }
