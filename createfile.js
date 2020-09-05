@@ -14,7 +14,7 @@ class generateFile{
 
             if( element )
                 object_file.element = document.getElementById( element );
-            else{
+            else {
                 object_file.element = document.createElement("a");
                 object_file.isTemp = true;
             }
@@ -103,7 +103,7 @@ class generateFile{
             if( this.isTemp )
                 element.remove();
         })
-        .catch(function( failureCallback ){
+        .catch( function( failureCallback ){
             throw new Error( failureCallback );
         });
     }
