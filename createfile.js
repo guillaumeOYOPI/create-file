@@ -81,46 +81,30 @@ class generateFile{
      * Trigger download
      */
     download(){
-        setTimeout( () => {
-            let element = document.querySelector( '[data-id="' + this.token + '"]' );
-            if( element ){
+        new Promise( ( resolve, failureCallback ) => {
+            setTimeout( () => {
 
-                element.click();
-                window.URL.revokeObjectURL( element.url );
+                let element = document.querySelector( '[data-id="' + this.token + '"]' );
 
-                element.href = "";
-                element.download = "";
-                element.dataset.id = "";
+                if( ! element ) failureCallback('Element doesn\'t exist');
+                    else resolve( element );
 
-                if( this.isTemp )
-                    element.remove();
-            }
-        }, 1);
+            }, 5);
+        })
+        .then( function( element ){
+
+            element.click();
+            window.URL.revokeObjectURL( element.url );
+
+            element.href = "";
+            element.download = "";
+            element.dataset.id = "";
+
+            if( this.isTemp )
+                element.remove();
+        })
+        .catch(function( failureCallback ){
+            throw new Error( failureCallback );
+        });
     }
 };
-
-var ready = ( callback ) => {
-    if ( document.readyState != "loading" ) callback();
-    else document.addEventListener( "DOMContentLoaded", callback );
-}
-ready( () => {
-
-    let button = document.getElementById( 'button' );
-
-    button.addEventListener( 'click', function(e) {
-        e.preventDefault();
-
-        let text = document.getElementById( 'textarea' );
-        let name = document.getElementById( 'name' );
-        let extension = document.getElementById( 'extension' );
-
-        let datafile = {
-            data: text.value,
-            name: name.value,
-            ext : extension.value
-        };
-
-        const file = new generateFile( datafile.data, datafile.name, datafile.ext);
-        file.download();
-    });
-});

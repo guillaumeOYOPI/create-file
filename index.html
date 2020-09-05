@@ -56,5 +56,32 @@
             </div>
         </div>
         <script src="createfile.js"></script>
+        <script>
+            var ready = ( callback ) => {
+                if ( document.readyState != "loading" ) callback();
+                else document.addEventListener( "DOMContentLoaded", callback );
+            }
+            ready( () => {
+
+                let button = document.getElementById( 'button' );
+
+                button.addEventListener( 'click', function(e) {
+                    e.preventDefault();
+
+                    let text = document.getElementById( 'textarea' );
+                    let name = document.getElementById( 'name' );
+                    let extension = document.getElementById( 'extension' );
+
+                    let datafile = {
+                        data: text.value,
+                        name: name.value,
+                        ext : extension.value
+                    };
+
+                    const file = new generateFile( datafile.data, datafile.name, datafile.ext);
+                    file.download();
+                });
+            });
+        </script>
     </body>
 </html>
