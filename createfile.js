@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Generate file & send download
  * @param {string} data exemple for csv '1,2,3\n4,5,6'
@@ -81,6 +82,9 @@ class generateFile{
      * Trigger download
      */
     download(){
+
+        var object_file = this;
+
         new Promise( ( resolve, failureCallback ) => {
             setTimeout( () => {
 
@@ -100,7 +104,7 @@ class generateFile{
             element.download = "";
             element.dataset.id = "";
 
-            if( this.isTemp )
+            if( object_file.isTemp )
                 element.remove();
         })
         .catch( function( failureCallback ){
