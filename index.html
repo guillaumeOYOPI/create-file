@@ -73,9 +73,9 @@
                     let extension = document.getElementById( 'extension' );
 
                     let datafile = {
-                        data: text.value,
-                        name: name.value,
-                        ext : extension.value
+                        data: String( text.value ),
+                        name: String( name.value ),
+                        ext : String( extension.value )
                     };
 
                     const file = new generateFile( datafile.data, datafile.name, datafile.ext);
