@@ -58,8 +58,7 @@ class generateFile{
         }).then( function( object_file ){
 
             document.body.append( object_file.element );
-            return object_file;
-
+            
         }).catch( function( failureCallback ){
 
             if( ! document.querySelector('.error-message') ){
