@@ -88,7 +88,7 @@ class generateFile{
         new Promise( ( resolve, failureCallback ) => {
             setTimeout( () => {
 
-                let element = document.querySelector( '[data-id="' + this.token + '"]' );
+                let element = document.querySelector( '[data-id="' + object_file.token + '"]' );
 
                 if( ! element ) failureCallback('Element doesn\'t exist');
                     else resolve( element );
