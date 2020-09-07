@@ -24,7 +24,7 @@ class generateFile{
                 object_file.name = String( fileName );
                 object_file.ext  = String( ext );
 
-                object_file.token = Math.random().toString(36).substr(2);
+                object_file.token = Math.random().toString(36).substr(2); // random id
 
                 if( typeof object_file.element !== 'object' || object_file.element === null )
                     failureCallback( 'Something has wrong with your "element".' );
@@ -46,7 +46,7 @@ class generateFile{
                     object_file.element.download = object_file.name + '.' + object_file.ext;
 
                     object_file.element.style.display = 'none';
-                    object_file.element.dataset.id = object_file.token;
+                    object_file.element.dataset.id = object_file.token; // set data-id with random id
 
                     if( ! object_file.blob ) failureCallback( 'Something has wrong with your "blob".' );
                     else if( ! object_file.url ) failureCallback( 'Something has wrong with your "url".' );
@@ -57,7 +57,8 @@ class generateFile{
             }
         }).then( function( object_file ){
 
-            document.body.append( object_file.element );
+            if( object_file.isTemp )
+                document.body.append( object_file.element );
             
         }).catch( function( failureCallback ){
 
